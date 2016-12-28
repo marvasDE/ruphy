@@ -39,6 +39,7 @@ class Atest {
     public function testTake() {
         var_dump($this->testA->take(3) == new A([1,2,3]));
         var_dump((array) $this->testA->take(3) === [1,2,3]);
+        // var_dump($this->testA->take(3));
     }
     
     public function testDrop() {
@@ -105,13 +106,34 @@ class Atest {
     public function testDelete() {
         $this->testA = new A([1, 2, 2, 3]);
         var_dump((array) $this->testA->delete(2) == [1, 3]);
-        var_dump((array) $this->testA);
+        // var_dump((array) $this->testA);
     }
     
+    public function testIndex() {
+        var_dump($this->testA->index(1) === 0);
+        var_dump($this->testA->index("z") === null);
+    }
     
-    // public function testIndex() {
-    //     var_dump($this->testA->include(1));
-    // }
+    public function testPHPStuff() {
+    //     $this->testA['first'] = "bla";
+    //     var_dump($this->testA->first);
+    //     var_dump($this->testA);
+    
+        foreach($this->testA as $testAValue) {
+            echo $testAValue;
+        }
+    }
+    
+    public function testCommon() {
+        $a1 = new A([1, 2, [1,2,3]]);
+        var_dump($a1);
+        
+        $a = new A();
+        // $a[0] = new A();
+        $a[0]['cat'] = 'feline';
+        // $a[1] = ["test"];
+        var_dump($a);
+    }
 }
 
 new Atest();

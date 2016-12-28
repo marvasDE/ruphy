@@ -1,6 +1,7 @@
 <?php
 
 class A extends ArrayObject {
+    /* +++++ Magic Methods +++++ */
     public function __get($name) {
         // method calling like ruby e.g. $a->pop
         if(method_exists("A", $name)) {
@@ -8,6 +9,37 @@ class A extends ArrayObject {
         }
     }
     
+    public function __construct(array $array = []) {
+        foreach($array as &$value) {
+            if(is_array($value)) {
+                $value = new A($value);
+            }
+        }
+        parent::__construct($array);
+    }
+    
+    /* +++++ Overwritten methods form ArrayObject +++++  */
+    public function &offsetGet($index) {
+        if(!$this->offsetExists($index)) {
+            $this->offsetSet($index, new A());
+        }
+
+        $var = parent::offsetGet($index);
+        return $var;
+    }
+    
+    public function offsetSet($index, $value) { // : void
+        if(is_array($value)) {
+            $value = new A($value);
+        }
+        parent::offsetSet($index, $value);
+    }
+    public function offsetUnset($index) { // : void
+        parent::offsetUnset($index);
+        $this->exchangeArray(array_values((array) $this)); // reindex
+    }
+    
+    /* +++++ Ruby Array Methods +++++ */
     public function at(int $index) { // : mixed
         return $this[$index];
     }
@@ -31,8 +63,9 @@ class A extends ArrayObject {
     public function first() { // : mixed
         return $this[0];
     }
-    public function index($mixed) {
-        $pos = array_search($this, $mixed);
+    public function index($mixed) { // : ?int
+        $index = array_search($mixed, (array) $this);
+        return $index !== false ? $index : null;
     }
     public function include($needle) : bool {
         return in_array($needle, (array) $this);
@@ -51,11 +84,6 @@ class A extends ArrayObject {
     }
     public function length() : int {
         return $this->count();
-    }
-    /* @override */
-    public function offsetUnset($index) { // : void
-        parent::offsetUnset($index);
-        $this->exchangeArray(array_values((array) $this)); // reindex
     }
     public function pop() { // : mixed
         $newArray = (array) $this;
