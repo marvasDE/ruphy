@@ -115,24 +115,27 @@ class Atest {
     }
     
     public function testPHPStuff() {
-    //     $this->testA['first'] = "bla";
-    //     var_dump($this->testA->first);
-    //     var_dump($this->testA);
-    
-        foreach($this->testA as $testAValue) {
-            echo $testAValue;
-        }
+        // isset works great:
+        var_dump(isset($this->testA[1337]) === false);
+        var_dump(isset($this->testA[1337]) === false);
+        
+        // but after getting, it's an A Object to handle multi dimensional arrays:
+        $this->testA[1337];
+        var_dump(isset($this->testA[1337]) === true);
+        var_dump(get_class($this->testA[1337]) === "A");
     }
     
     public function testCommon() {
         $a1 = new A([1, 2, [1,2,3]]);
-        var_dump($a1);
+        // auto converting constructor:
+        var_dump($a1 == new A([1, 2, new A([1,2,3])]));
         
         $a = new A();
-        // $a[0] = new A();
         $a[0]['cat'] = 'feline';
-        // $a[1] = ["test"];
-        var_dump($a);
+        $a[1] = ["test"];
+        
+        // multi dimension converting
+        var_dump($a == new A([new A(['cat' => 'feline']), new A(["test"])]));
     }
 }
 
