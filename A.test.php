@@ -172,6 +172,11 @@ class Atest {
         assert(A::new(3) == new A([null, null, null]));
         assert(A::new(3, true) == new A([true, true, true]));
     }
+    
+    public function testStaticNewWithFunctions() {
+        assert(A::new(3, function() { return A::new(); }) == new A([new A(), new A(), new A()]));
+        assert(A::new(3, function() { return A::new(3); }) == new A([new A([null,null,null]), new A([null,null,null]), new A([null,null,null])]));
+    }
 }
 
 new Atest();

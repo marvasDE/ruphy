@@ -131,6 +131,14 @@ class A extends ArrayObject {
         if($length < 0) {
             throw new Exception("Array length have to be greater than zero");
         }
-        return new A(array_fill(0, $length, $defaultValue));
+        if(is_callable($defaultValue)) {
+            $storage = [];
+            for($i = 0; $i < $length; $i++) {
+                $storage[] = $defaultValue();
+            }
+        } else {
+            $storage = array_fill(0, $length, $defaultValue);
+        }
+        return new A($storage);
     }
 }
