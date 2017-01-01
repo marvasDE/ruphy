@@ -20,6 +20,21 @@ class A extends ArrayObject {
     
     /* +++++ Overwritten methods form ArrayObject +++++  */
     public function &offsetGet($index) {
+        // handle ranges e.g. $arr[1.3]
+        if(is_float($index)) {
+            $start = intval($index);
+            $end = explode(".", $index)[1];
+            $result = new A(array_slice((array) $this, $start, $end));
+            return $result;
+        }
+        // handle (comma seperated) slicing indizies, e.g. $a["-3,3"]
+        if(is_string($index) && preg_match("/^-?[0-9]+,[0-9]+$/", str_replace(" ", "", $index))) {
+            $range = explode(",", $index);
+            $start = $range[0];
+            $end   = $range[1];
+            $result = new A(array_slice((array) $this, $start, $end));
+            return $result;
+        }
         if(!$this->offsetExists($index)) {
             $this->offsetSet($index, new A());
         }

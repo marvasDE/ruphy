@@ -1,5 +1,17 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once "A.class.php";
+
+assert_options( ASSERT_CALLBACK, 'assert_callback');
+
+function assert_callback($script, $line, $message) {
+    echo 'You have a design error in your script <b>', $script,'</b> : line <b>', $line,'</b> :<br />';
+    echo '<b>'.$message.'</b><br /><br />';
+    echo 'Open the source file and check it, because it\'s not a normal behaviour !';
+    exit;
+}
 
 class Atest {
     private $testA;
@@ -9,133 +21,151 @@ class Atest {
         
         foreach(get_class_methods("Atest") as $method) {
             if(substr($method, 0, 4) == "test") {
-                echo $method . ":\n";
+                echo $method . ":<br />\n";
                 $this->$method();
-                echo "\n";
+                echo "Keine Fehler<br />\n";
+                echo "<br />\n";
             }
         }
     }
     
     public function testConstruct() {
-        var_dump($this->testA[0] === 1);
-        var_dump($this->testA[1] === 2);
-        var_dump($this->testA[2] === 3);
+        assert($this->testA[0] === 1);
+        assert($this->testA[1] === 2);
+        assert($this->testA[2] === 3);
     }
     
     public function testAt() {
-        var_dump($this->testA->at(0) === 1);
-        var_dump($this->testA->at(1) === 2);
-        var_dump($this->testA->at(2) === 3);
+        assert($this->testA->at(0) === 1);
+        assert($this->testA->at(1) === 2);
+        assert($this->testA->at(2) === 3);
     }
     
     public function testFirst() {
-        var_dump($this->testA->first() === 1);
+        assert($this->testA->first() === 1);
     }
     
     public function testLast() {
-        var_dump($this->testA->last() === 6);
+        assert($this->testA->last() === 6);
     }
     
     public function testTake() {
-        var_dump($this->testA->take(3) == new A([1,2,3]));
-        var_dump((array) $this->testA->take(3) === [1,2,3]);
-        // var_dump($this->testA->take(3));
+        assert($this->testA->take(3) == new A([1,2,3]));
+        assert((array) $this->testA->take(3) === [1,2,3]);
+        // assert($this->testA->take(3));
     }
     
     public function testDrop() {
-        // var_dump($this->testA->drop(3));
-        var_dump($this->testA->drop(3) == new A([4,5,6]));
-        var_dump((array) $this->testA->drop(3) === [4,5,6]);
+        // assert($this->testA->drop(3));
+        assert($this->testA->drop(3) == new A([4,5,6]));
+        assert((array) $this->testA->drop(3) === [4,5,6]);
     }
     
     public function testLength() {
-        var_dump($this->testA->length() === 6);
+        assert($this->testA->length() === 6);
     }
     
     public function testEmpty() {
-        var_dump($this->testA->empty() === false);
-        var_dump((new A())->empty() === true);
-        // var_dump((new A())->empty === true);
+        assert($this->testA->empty() === false);
+        assert((new A())->empty() === true);
+        // assert((new A())->empty === true);
     }
     
     public function testInclude() {
-        var_dump($this->testA->include(1) === true);
-        var_dump($this->testA->include(1337) === false);
+        assert($this->testA->include(1) === true);
+        assert($this->testA->include(1337) === false);
     }
     
     public function testPush() {
         $this->testA->push(7);
-        var_dump($this->testA->last() === 7);
+        assert($this->testA->last() === 7);
     }
     
     public function testUnshift() {
         $this->testA->unshift(0);
-        var_dump($this->testA->first() === 0);
-        // var_dump($this);
+        assert($this->testA->first() === 0);
+        // assert($this);
     }
     
     public function testInsert() {
         $this->testA->insert(3, 'apple');
-        var_dump((array) $this->testA == [0, 1, 2, 'apple', 3, 4, 5, 6, 7]);
+        assert((array) $this->testA == [0, 1, 2, 'apple', 3, 4, 5, 6, 7]);
         
         $this->testA = new A([0,1,2,3,4,5,6]);
         $this->testA->insert(3, 'orange', 'pear', 'grapefruit');
-        var_dump((array) $this->testA == [0, 1, 2, 'orange', 'pear', 'grapefruit', 3, 4, 5, 6]);
+        assert((array) $this->testA == [0, 1, 2, 'orange', 'pear', 'grapefruit', 3, 4, 5, 6]);
     }
     
     public function testPop() {
         $this->testA = new A([1, 2, 3, 4, 5, 6]);
-        var_dump($this->testA->pop() === 6);
-        var_dump($this->testA->pop === 5);
-        var_dump((array) $this->testA == [1, 2, 3, 4]);
+        assert($this->testA->pop() === 6);
+        assert($this->testA->pop === 5);
+        assert((array) $this->testA == [1, 2, 3, 4]);
     }
     
     public function testShift() {
         $this->testA = new A([1, 2, 3, 4, 5]);
-        var_dump($this->testA->shift() === 1);
-        var_dump((array) $this->testA == [2, 3, 4, 5]);
-        // var_dump((array) $this->testA);
+        assert($this->testA->shift() === 1);
+        assert((array) $this->testA == [2, 3, 4, 5]);
+        // assert((array) $this->testA);
     }
     
     public function testDeleteAt() {
-        var_dump($this->testA->delete_at(2) == 4);
-        var_dump((array) $this->testA == [2, 3, 5]);
-        // var_dump((array) $this->testA);
+        assert($this->testA->delete_at(2) == 4);
+        assert((array) $this->testA == [2, 3, 5]);
+        // assert((array) $this->testA);
     }
     
     public function testDelete() {
         $this->testA = new A([1, 2, 2, 3]);
-        var_dump((array) $this->testA->delete(2) == [1, 3]);
-        // var_dump((array) $this->testA);
+        assert((array) $this->testA->delete(2) == [1, 3]);
+        // assert((array) $this->testA);
     }
     
     public function testIndex() {
-        var_dump($this->testA->index(1) === 0);
-        var_dump($this->testA->index("z") === null);
+        assert($this->testA->index(1) === 0);
+        assert($this->testA->index("z") === null);
     }
     
     public function testPHPStuff() {
         // isset works great:
-        var_dump(isset($this->testA[1337]) === false);
-        var_dump(isset($this->testA[1337]) === false);
+        assert(isset($this->testA[1337]) === false);
+        assert(isset($this->testA[1337]) === false);
         
         // but after getting, it's an A Object to handle multi dimensional arrays:
         $this->testA[1337];
-        var_dump(isset($this->testA[1337]) === true);
-        var_dump(get_class($this->testA[1337]) === "A");
+        assert(isset($this->testA[1337]) === true);
+        assert(get_class($this->testA[1337]) === "A");
     }
     
     public function testCommon() {
         $a1 = new A([1, 2, [1,2,3]]);
         // auto converting constructor:
-        var_dump($a1 == new A([1, 2, new A([1,2,3])]));
+        assert($a1 == new A([1, 2, new A([1,2,3])]));
         
         $a = new A();
-        $a[0]['cat'] = 'feline';
-        $a[1] = ["test"];
-        
         // multi dimension converting
-        var_dump($a == new A([new A(['cat' => 'feline']), new A(["test"])]));
+        $a[0]['cat'] = 'feline';
+        assert($a == new A([new A(['cat' => 'feline'])]));
+        
+        // convert by setting arrays
+        $a[1] = ["test"];
+        assert($a == new A([new A(['cat' => 'feline']), new A(["test"])]));
+    }
+    
+    public function testRangeIndex() {
+        $a = new A(["a", "b", "c", "d", "e"]);
+        assert($a[1.3] == new A(["b", "c", "d"]));
+        
+        assert($a == new A(["a", "b", "c", "d", "e"]));
+        
+        // assert($a["1, 2"] == new A(["b", "c"]));
+    }
+    
+    public function testSliceIndex() {
+        $a = new A(["a", "b", "c", "d", "e"]);
+        assert($a["2,3"] == new A(["c", "d", "e"]));
+        assert($a["-3,3"] == new A(["c", "d", "e"]));
     }
 }
 
