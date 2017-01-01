@@ -156,10 +156,9 @@ class Atest {
     public function testRangeIndex() {
         $a = new A(["a", "b", "c", "d", "e"]);
         assert($a[1.3] == new A(["b", "c", "d"]));
-        
+        assert($a["1.3"] == new A(["b", "c", "d"]));
+        assert($a["1..3"] == new A(["b", "c", "d"]));
         assert($a == new A(["a", "b", "c", "d", "e"]));
-        
-        // assert($a["1, 2"] == new A(["b", "c"]));
     }
     
     public function testSliceIndex() {

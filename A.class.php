@@ -21,7 +21,8 @@ class A extends ArrayObject {
     /* +++++ Overwritten methods form ArrayObject +++++  */
     public function &offsetGet($index) {
         // handle ranges e.g. $arr[1.3]
-        if(is_float($index)) {
+        if(is_float($index) || (is_string($index) && preg_match("/^-?[0-9]+\.{1,2}[0-9]+$/", str_replace(" ", "", $index)))) {
+            $index = str_replace("..", ".", $index); // remove double points if available
             $start = intval($index);
             $end = explode(".", $index)[1];
             $result = new A(array_slice((array) $this, $start, $end));
