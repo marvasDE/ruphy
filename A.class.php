@@ -124,4 +124,13 @@ class A extends ArrayObject {
         array_unshift($newArray, $mixed);
         $this->exchangeArray($newArray);
     }
+    
+    // +++++ static methods +++++
+    
+    public static function new(int $length = 0, $defaultValue = null) : A {
+        if($length < 0) {
+            throw new Exception("Array length have to be greater than zero");
+        }
+        return new A(array_fill(0, $length, $defaultValue));
+    }
 }

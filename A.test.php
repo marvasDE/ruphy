@@ -166,6 +166,12 @@ class Atest {
         assert($a["2,3"] == new A(["c", "d", "e"]));
         assert($a["-3,3"] == new A(["c", "d", "e"]));
     }
+    
+    public function testStaticNew() {
+        assert(A::new() == new A());
+        assert(A::new(3) == new A([null, null, null]));
+        assert(A::new(3, true) == new A([true, true, true]));
+    }
 }
 
 new Atest();
