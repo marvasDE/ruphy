@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once "A.class.php";
+require_once "../src/A.class.php";
 
 assert_options( ASSERT_CALLBACK, 'assert_callback');
 
