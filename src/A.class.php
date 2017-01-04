@@ -1,13 +1,9 @@
 <?php
+require_once "traits/ObjectTrait.php";
 
 class A extends ArrayObject {
-    /* +++++ Magic Methods +++++ */
-    public function __get($name) {
-        // method calling like ruby e.g. $a->pop
-        if(method_exists("A", $name)) {
-            return $this->$name();
-        }
-    }
+    // traits
+    use ObjectTrait;
     
     public function __construct(array $array = []) {
         foreach($array as &$value) {
